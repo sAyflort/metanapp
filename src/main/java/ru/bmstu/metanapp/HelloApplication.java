@@ -466,45 +466,38 @@ public class HelloApplication {
             for (int I = IL; I <= IM; I++) {
                 Z = A[I - 1][J - 1][NF - 1];
                 if ((J == JA && I == 2) || (J == JA1 && I == IC2 + 1) || (J == JA2 && I == IC2 + 1) || (J == JA3 && I == IC2 + 1) || (J == JZ && I == 2) || (J == JZ1 && I == 2)) {
+                    A[I - 1][J - 1][NF - 1] = A[I - 1 - 1][J - 1][NF - 1];
                     //goto 121
-                }
-                if (JB1 == JN) {
-                    //goto 78
-                }
-                if (J == (JB1 - 1) && I == IC2) {
+                } else if (JB1 != JN && J == (JB1 - 1) && I == IC2) {
+                    A[I - 1][J - 1][NF - 1] = A[I - 1][J + 1 - 1][NF - 1];
                     //goto 123
+                } else {
+                    SOURCE = sorce(N1, N2, N3, A, SOURCE, I, J, NF);
+                    if (NITER <= NPRINT) {
+                        SOURCE = 0;
+                    }
+                    RISO = 1 / R[J - 1] / R[J - 1];
+                    ROP3 = A[I - 1][J - 1][NRO3 - 1];
+                    BBE = 4 / (A[I + 1 - 1][J - 1][NRO3 - 1] + ROP3) * RISO * BE[I - 1];
+                    BBW = 4 / (A[I - 1 - 1][J - 1][NRO3 - 1] + ROP3) * RISO * BW[I - 1];
+                    BBN = 16 / (A[I - 1][J + 1 - 1][NRO3 - 1] + ROP3) / (Math.pow(R[J + 1 - 1] + R[J - 1], 2)) * BN[J - 1];
+                    BBS = 16 / (A[I - 1][J - 1 - 1][NRO3 - 1] + ROP3) / (Math.pow(R[J - 1 - 1] + R[J - 1], 2)) * BS[J - 1];
+                    ANUM = BBE * A[I + 1 - 1][J - 1][NF - 1] + BBW * A[I - 1 - 1][J - 1][NF - 1] + BBN * A[I - 1][J + 1 - 1][NF - 1] + BBS * A[I - 1][J - 1 - 1][NF - 1] + SOURCE;
+                    ADNM = BBE + BBW + BBN + BBS;
+                    if (ADNM == 0) {
+                        continue;
+                    }
+                    A[I - 1][J - 1][NF - 1] = ANUM / ADNM;
                 }
-                //78 RK3 109
-                SOURCE = sorce(N1, N2, N3, A, SOURCE, I, J, NF);
-                if (NITER <= NPRINT) {
-                    SOURCE = 0;
-                }
-                RISO = 1 / R[J - 1] / R[J - 1];
-                ROP3 = A[I - 1][J - 1][NRO3 - 1];
-                BBE = 4 / (A[I + 1 - 1][J - 1][NRO3 - 1] + ROP3) * RISO * BE[I - 1];
-                BBW = 4 / (A[I - 1 - 1][J - 1][NRO3 - 1] + ROP3) * RISO * BW[I - 1];
-                BBN = 16 / (A[I - 1][J + 1 - 1][NRO3 - 1] + ROP3) / (Math.pow(R[J + 1 - 1] + R[J - 1], 2)) * BN[J - 1];
-                BBS = 16 / (A[I - 1][J - 1 - 1][NRO3 - 1] + ROP3) / (Math.pow(R[J - 1 - 1] + R[J - 1], 2)) * BS[J - 1];
-                ANUM = BBE * A[I + 1 - 1][J - 1][NF - 1] + BBW * A[I - 1 - 1][J - 1][NF - 1] + BBN * A[I - 1][J + 1 - 1][NF - 1] + BBS * A[I - 1][J - 1 - 1][NF - 1] + SOURCE;
-                ADNM = BBE + BBW + BBN + BBS;
-                if (ADNM == 0) {
-                    continue;
-                }
-                A[I - 1][J - 1][NF - 1] = ANUM / ADNM;
-                //goto 122
-                A[I - 1][J - 1][NF - 1] = A[I - 1 - 1][J - 1][NF - 1]; // 121
-                //goto 122
-                A[I - 1][J - 1][NF - 1] = A[I - 1][J + 1 - 1][NF - 1]; // 123
-                //122
+
                 if (Math.abs(A[I - 1][J - 1][NF - 1]) >= 1.E-20) {
+                    RS = 1 - Z / A[I - 1][J - 1][NF - 1];
                     //goto 25
+                } else {
+                    if (Math.abs(Z) >= 1.E-20) {
+                        RS = 1 - A[I - 1][J - 1][NF - 1] / Z;
+                    }
                 }
-                if (Math.abs(Z) >= 1.E-20) {
-                    RS = 1 - A[I - 1][J - 1][NF - 1] / Z;
-                }
-                //goto 26
-                RS = 1 - Z / A[I - 1][J - 1][NF - 1]; // 25
-                //26 RK3 132
                 if (Math.abs(A[I - 1][J - 1][NF - 1]) < 1.E-20 && Math.abs(Z) < 1.E-20) {
                     RS = 0;
                 }
@@ -519,6 +512,82 @@ public class HelloApplication {
                 }
             }
         } // 21 RK3 137
+        for (int J = 3; J <= JNM; J++) {
+            int IL = IMIN[J - 1];
+            int IM = IMAX[J - 1];
+            if (J == JA3) {
+                IL = IC2 + 1;
+            }
+            if (J == JC) {
+                IM = IC - 1;
+            }
+            for (int I = IL; I <= IM; I++) {
+                BBE = (A[I + 1 - 1][J - 1][NMU - 1] * Math.pow(R[J - 1], 2) + A[I - 1][J - 1][NMU - 1] * Math.pow(R[J - 1], 2)) * BE[I - 1];
+                BBW = (A[I - 1 - 1][J - 1][NMU - 1] * Math.pow(R[J - 1], 2) + A[I - 1][J - 1][NMU - 1] * Math.pow(R[J - 1], 2)) * BW[I - 1];
+                BBN = (A[I - 1][J + 1 - 1][NMU - 1] * Math.pow(R[J - 1], 2) + A[I - 1][J - 1][NMU - 1] * Math.pow(R[J - 1], 2)) * BN[I - 1];
+                BBS = (A[I - 1][J - 1 - 1][NMU - 1] * Math.pow(R[J - 1], 2) + A[I - 1][J - 1][NMU - 1] * Math.pow(R[J - 1], 2)) * BS[I - 1];
+                ANUM = (AE[I - 1][J - 1] + BBE / Math.pow(R[J - 1], 2)) * A[I + 1 - 1][J - 1][NMU2 - 1] +
+                        (AW[I - 1][J - 1] + BBW / Math.pow(R[J - 1], 2)) * A[I - 1 - 1][J - 1][NMU2 - 1] +
+                        (AN[I - 1][J - 1] + BBN / Math.pow(R[J + 1 - 1], 2)) * A[I - 1][J + 1 - 1][NMU2 - 1] +
+                        (AS[I - 1][J - 1] + BBS / Math.pow(R[J - 1 - 1], 2)) * A[I - 1][J - 1 - 1][NMU2 - 1];
+                ADNM = AE[I - 1][J - 1] + AW[I - 1][J - 1] + AN[I - 1][J - 1] + AS[I - 1][J - 1] +
+                        BBE / Math.pow(R[J - 1], 2) + BBW / Math.pow(R[J - 1], 2) + BBN / Math.pow(R[J + 1 - 1], 2) +
+                        BBS / Math.pow(R[J - 1 - 1], 2);
+                if(ADNM == 0) {
+                    continue;
+                }
+                Z = A[I-1][J-1][NMU2-1];
+                A[I-1][J-1][NMU2-1] = ANUM / ADNM;
+            }
+        }//RK3 156
+
+        for (int I = 2; I <= INM; I++) {
+            A[I-1][2-1][NMU2-1] = A[I-1][3-1][NMU2-1] * R[2-1] / R[3-1];
+        }
+
+        for (int II = 3; II <= 10; II++) {
+            int K = 13 - II;
+            for (int J = 2; J <= JNM; J++) {
+                int IL = IMIN[J-1];
+                int IM = IMAX[J-1];
+                if(J == JA3) {
+                    IL = IC2 + 1;
+                }
+                if(J == JC) {
+                    IM = IC - 1;
+                }
+                for (int I = IL; I <= IM; I++) {
+                    ADNM = AE1[I-1][J-1] + AW1[I-1][J-1] + AN1[I-1][J-1] + AS1[I-1][J-1];
+                    Z = A[I-1][J-1][K-1]; // RK3 169
+                    ANUM = AE1[I-1][J-1]*A[I+1-1][J-1][K-1]+AW1[I-1][J-1]*A[I-1-1][J-1][K-1]+AN1[I-1][J-1]*A[I-1][J+1-1][K-1]+AS1[I-1][J-1]*A[I-1][J-1-1][K-1];
+                    SOURCE = sorce(N1,N2,N3, A, SOURCE, I, J, K);
+                    ANUM = ANUM + SOURCE;
+                    if(ADNM == 0) {
+                        //goto 51
+                    }
+                    A[I-1][J-1][K-1] = ANUM / ADNM;
+                    if(K != NMU1) {
+                        //goto 51
+                    }
+                    if(Math.abs(A[I-1][J-1][K-1]) >= 1.E-20) {
+                        //goto 65
+                    }
+                    if(Math.abs(Z) >= 1.E-20) {
+                        RS = 1 - A[I-1][J-1][K-1] / Z;
+                    }
+                    //goto 66
+                    RS = 1 - Z / A[I-1][J-1][K-1]; // 65
+                    //66
+                    if(Math.abs(A[I-1][J-1][K-1]) < 1.E-20 && Math.abs(Z) < 1.E-20) {
+                        RS = 0;
+                    }
+                    if(Math.abs(RS) > Math.abs(RSDU[K-1])) {
+                        RSDU[K-1] = RS;
+                    }
+                } //51
+            }//51
+        }//61
+
     }
 
     private static double sorce(int N1, int N2, int N3, double[][][] A, double SOURCE, int I, int J, int NW) {
