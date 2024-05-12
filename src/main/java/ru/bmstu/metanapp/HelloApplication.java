@@ -533,61 +533,184 @@ public class HelloApplication {
                 ADNM = AE[I - 1][J - 1] + AW[I - 1][J - 1] + AN[I - 1][J - 1] + AS[I - 1][J - 1] +
                         BBE / Math.pow(R[J - 1], 2) + BBW / Math.pow(R[J - 1], 2) + BBN / Math.pow(R[J + 1 - 1], 2) +
                         BBS / Math.pow(R[J - 1 - 1], 2);
-                if(ADNM == 0) {
+                if (ADNM == 0) {
                     continue;
                 }
-                Z = A[I-1][J-1][NMU2-1];
-                A[I-1][J-1][NMU2-1] = ANUM / ADNM;
+                Z = A[I - 1][J - 1][NMU2 - 1];
+                A[I - 1][J - 1][NMU2 - 1] = ANUM / ADNM;
             }
         }//RK3 156
 
         for (int I = 2; I <= INM; I++) {
-            A[I-1][2-1][NMU2-1] = A[I-1][3-1][NMU2-1] * R[2-1] / R[3-1];
+            A[I - 1][2 - 1][NMU2 - 1] = A[I - 1][3 - 1][NMU2 - 1] * R[2 - 1] / R[3 - 1];
         }
 
         for (int II = 3; II <= 10; II++) {
             int K = 13 - II;
             for (int J = 2; J <= JNM; J++) {
-                int IL = IMIN[J-1];
-                int IM = IMAX[J-1];
-                if(J == JA3) {
+                int IL = IMIN[J - 1];
+                int IM = IMAX[J - 1];
+                if (J == JA3) {
                     IL = IC2 + 1;
                 }
-                if(J == JC) {
+                if (J == JC) {
                     IM = IC - 1;
                 }
                 for (int I = IL; I <= IM; I++) {
-                    ADNM = AE1[I-1][J-1] + AW1[I-1][J-1] + AN1[I-1][J-1] + AS1[I-1][J-1];
-                    Z = A[I-1][J-1][K-1]; // RK3 169
-                    ANUM = AE1[I-1][J-1]*A[I+1-1][J-1][K-1]+AW1[I-1][J-1]*A[I-1-1][J-1][K-1]+AN1[I-1][J-1]*A[I-1][J+1-1][K-1]+AS1[I-1][J-1]*A[I-1][J-1-1][K-1];
-                    SOURCE = sorce(N1,N2,N3, A, SOURCE, I, J, K);
+                    ADNM = AE1[I - 1][J - 1] + AW1[I - 1][J - 1] + AN1[I - 1][J - 1] + AS1[I - 1][J - 1];
+                    Z = A[I - 1][J - 1][K - 1]; // RK3 169
+                    ANUM = AE1[I - 1][J - 1] * A[I + 1 - 1][J - 1][K - 1] + AW1[I - 1][J - 1] * A[I - 1 - 1][J - 1][K - 1] + AN1[I - 1][J - 1] * A[I - 1][J + 1 - 1][K - 1] + AS1[I - 1][J - 1] * A[I - 1][J - 1 - 1][K - 1];
+                    SOURCE = sorce(N1, N2, N3, A, SOURCE, I, J, K);
                     ANUM = ANUM + SOURCE;
-                    if(ADNM == 0) {
+                    if (ADNM == 0) {
+                        continue;
                         //goto 51
                     }
-                    A[I-1][J-1][K-1] = ANUM / ADNM;
-                    if(K != NMU1) {
+                    A[I - 1][J - 1][K - 1] = ANUM / ADNM;
+                    if (K != NMU1) {
+                        continue;
                         //goto 51
                     }
-                    if(Math.abs(A[I-1][J-1][K-1]) >= 1.E-20) {
+                    if (Math.abs(A[I - 1][J - 1][K - 1]) >= 1.E-20) {
+                        RS = 1 - Z / A[I - 1][J - 1][K - 1]; // 65
                         //goto 65
+                    } else {
+                        if (Math.abs(Z) >= 1.E-20) {
+                            RS = 1 - A[I - 1][J - 1][K - 1] / Z;
+                        }
                     }
-                    if(Math.abs(Z) >= 1.E-20) {
-                        RS = 1 - A[I-1][J-1][K-1] / Z;
-                    }
-                    //goto 66
-                    RS = 1 - Z / A[I-1][J-1][K-1]; // 65
-                    //66
-                    if(Math.abs(A[I-1][J-1][K-1]) < 1.E-20 && Math.abs(Z) < 1.E-20) {
+                    if (Math.abs(A[I - 1][J - 1][K - 1]) < 1.E-20 && Math.abs(Z) < 1.E-20) {
                         RS = 0;
                     }
-                    if(Math.abs(RS) > Math.abs(RSDU[K-1])) {
-                        RSDU[K-1] = RS;
+                    if (Math.abs(RS) > Math.abs(RSDU[K - 1])) {
+                        RSDU[K - 1] = RS;
                     }
                 } //51
             }//51
         }//61
+        double CM;
+        double ZNK;
+        for (int J = 2; J <= JNM; J++) { //to 56
+            int IL = IMIN[J - 1];
+            int IM = IMAX[J - 1];
+            if (J == JA3) {
+                IL = IC2 + 1;
+            }
+            if (J == JC) {
+                IM = IC - 1;
+            }
+            for (int I = IL; I <= IM; I++) { //to 56
+                FKS[I - 1][J - 1] = A[I - 1][J - 1][NMFU1 - 1];
+                TKS[I - 1][J - 1] = A[I - 1][J - 1][NMOX1 - 1];
+                CM = A[I - 1][J - 1][NMFU1 - 1] + A[I - 1][J - 1][NMFU2 - 1] + A[I - 1][J - 1][NMOX1 - 1] + A[I - 1][J - 1][NMOX2 - 1] + A[I - 1][J - 1][NMPR1 - 1] + A[I - 1][J - 1][NMPR2 - 1] + A[I - 1][J - 1][NMDF - 1];
+                if (Math.abs(CM) <= 1.E-20) {
+                    continue;
+                }
+                A[I - 1][J - 1][NMFU1 - 1] = A[I - 1][J - 1][NMFU1 - 1] / CM;
+                A[I - 1][J - 1][NMFU2 - 1] = A[I - 1][J - 1][NMFU2 - 1] / CM;
+                A[I - 1][J - 1][NMOX1 - 1] = A[I - 1][J - 1][NMOX1 - 1] / CM;
+                A[I - 1][J - 1][NMOX2 - 1] = A[I - 1][J - 1][NMOX2 - 1] / CM;
+                A[I - 1][J - 1][NMPR1 - 1] = A[I - 1][J - 1][NMPR1 - 1] / CM;
+                A[I - 1][J - 1][NMPR2 - 1] = A[I - 1][J - 1][NMPR2 - 1] / CM;
+                A[I - 1][J - 1][NMDF - 1] = A[I - 1][J - 1][NMDF - 1] / CM;
+            }
+        }
+        for (int J = 2; J <= JNM; J++) { // to 82
+            int IL = IMIN[J - 1];
+            int IM = IMAX[J - 1]; // RK3 207
+            if (J == JA3) {
+                IL = IC2 + 1;
+            }
+            if (J == JC) {
+                IM = IC - 1;
+            }
+            for (int I = IL; I <= IM; I++) { // to 82
+                if (NITER != 18) {
+                    //goto 331
+                }
+                if (I >= 3 && I <= 11 && J > JZ && J < JA1) {
+                    //goto 33
+                }
+                if (A[I - 1][J - 1][NT - 1] < ROM1) { //331
+                    //goto 304
+                }
+                //33
+                if (A[I - 1][J - 1][NMFU1 - 1] <= 1.E-20) {
+                    //goto 82
+                }
+                ZNK = A[I - 1][J - 1][NMOX1 - 1] / A[I - 1][J - 1][NMFU1 - 1];
+                if (ZNK > 3.9166) {
+                    //goto 83
+                }
+                A[I - 1][J - 1][NMPR1 - 1] = A[I - 1][J - 1][NMPR1 - 1] + (8. * 44. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
+                A[I - 1][J - 1][NMOX2 - 1] = A[I - 1][J - 1][NMOX2 - 1] + (16. * 28. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
+                A[I - 1][J - 1][NMDF - 1] = A[I - 1][J - 1][NMDF - 1] + (4. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
+                A[I - 1][J - 1][NMPR2 - 1] = A[I - 1][J - 1][NMPR2 - 1] + (30. * 18. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
+                A[I - 1][J - 1][NMFU2 - 1] = A[I - 1][J - 1][NMFU2 - 1] + (32. * 17. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
+                A[I - 1][J - 1][NMFU1 - 1] = A[I - 1][J - 1][NMFU1 - 1] - (24. * 16. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
+                if (A[I - 1][J - 1][NMFU1 - 1] < 1.E-20) {
+                    A[I - 1][J - 1][NMFU1 - 1] = 1.E-20;
+                }
+                A[I - 1][J - 1][NMOX1 - 1] = 1.E-20;
+                //goto 304
+                //83
+                A[I - 1][J - 1][NMPR1 - 1] = A[I - 1][J - 1][NMPR1 - 1] + (8. * 44. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
+                A[I - 1][J - 1][NMOX2 - 1] = A[I - 1][J - 1][NMOX2 - 1] + (28. * 16. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
+                A[I - 1][J - 1][NMDF - 1] = A[I - 1][J - 1][NMDF - 1] + (4. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
+                A[I - 1][J - 1][NMPR2 - 1] = A[I - 1][J - 1][NMPR2 - 1] + (30. * 18. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
+                A[I - 1][J - 1][NMFU2 - 1] = A[I - 1][J - 1][NMFU2 - 1] + (32. * 17. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
+                A[I - 1][J - 1][NMOX1 - 1] = A[I - 1][J - 1][NMOX1 - 1] - (47. * 32. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
+                if (A[I - 1][J - 1][NMOX1 - 1] < 1.E-20) {
+                    A[I - 1][J - 1][NMOX1 - 1] = 1.E-20;
+                }
+                A[I - 1][J - 1][NMFU1 - 1] = 1.E-20;
+                //goto 304 RK3 237
+                CM = A[I - 1][J - 1][NMFU1 - 1] + A[I - 1][J - 1][NMFU2 - 1] + A[I - 1][J - 1][NMOX1 - 1] + A[I - 1][J - 1][NMOX2 - 1] + A[I - 1][J - 1][NMPR1 - 1] + A[I - 1][J - 1][NMPR2 - 1] + A[I - 1][J - 1][NMDF - 1];
+                if (Math.abs(CM) <= 1.E-20) {
+                    //goto 82
+                }
+                A[I - 1][J - 1][NMFU1 - 1] = A[I - 1][J - 1][NMFU1 - 1] / CM;
+                A[I - 1][J - 1][NMFU2 - 1] = A[I - 1][J - 1][NMFU2 - 1] / CM;
+                A[I - 1][J - 1][NMOX1 - 1] = A[I - 1][J - 1][NMOX1 - 1] / CM;
+                A[I - 1][J - 1][NMOX2 - 1] = A[I - 1][J - 1][NMOX2 - 1] / CM;
+                A[I - 1][J - 1][NMPR1 - 1] = A[I - 1][J - 1][NMPR1 - 1] / CM;
+                A[I - 1][J - 1][NMPR2 - 1] = A[I - 1][J - 1][NMPR2 - 1] / CM;
+                A[I - 1][J - 1][NMDF - 1] = A[I - 1][J - 1][NMDF - 1] / CM;
+                if (Math.abs(FKS[I - 1][J - 1]) < 1.E-22) {
+                    //goto 787
+                }
+                RS = 1 - A[I - 1][J - 1][NMFU1 - 1] / FKS[I - 1][J - 1];
+                //goto 789
+                RS = 1; // 787
+                //789
+                if (Math.abs(FKS[I - 1][J - 1]) < 1.E-22 && Math.abs(A[I - 1][J - 1][NMFU1 - 1]) < 1.E-22) {
+                    RS = 0;
+                }
+                if (Math.abs(RS) >= Math.abs(RSDU[NMFU1 - 1])) {
+                    RSDU[NMFU1 - 1] = Math.abs(RS);
+                }
+                if (Math.abs(TKS[I - 1][J - 1]) < 1.E-22) {
+                    //goto 393
+                }
+                RS = 1 - A[I - 1][J - 1][NMOX1 - 1] / TKS[I - 1][J - 1];
+                //goto 399
+                RS = 1; //393
+                //399
+                if (Math.abs(TKS[I - 1][J - 1]) < 1.E-22 && Math.abs(A[I - 1][J - 1][NMOX1 - 1]) < 1.E-22) {
+                    RS = 0;
+                }
+                if (Math.abs(RS) >= Math.abs(RSDU[NMOX1 - 1])) {
+                    RSDU[NMOX1 - 1] = Math.abs(RS);
+                }
+                FKS[I - 1][J - 1] = 0;
+                TKS[I - 1][J - 1] = 0;
+                //82
+                bound(N1, N2, N3, A);
+            }
+        }
+    }
 
+    private static void bound(int N1, int N2, int N3, double[][][] A) {
     }
 
     private static double sorce(int N1, int N2, int N3, double[][][] A, double SOURCE, int I, int J, int NW) {
@@ -603,7 +726,207 @@ public class HelloApplication {
     }
 
     private static void viscos(int N1, int N2, int N3, double[][][] A) {
+        RL = 0.1;
+        for (int K = 3; K <= 9; K++) { //to 100
+            for (int J = 1; J <= JN; J++) { //to 100
+                int IL = IMIN[J - 1];
+                int IM = IMAX[J - 1] + 1;
+                if (J <= JC) {
+                    IM = IN;
+                }
+                if (J < JA1 && J > JA) {
+                    IL = IMIN[J - 1] - 1;
+                }
+                if (J > JA2) {
+                    IL = IMIN[J - 1] - 1;
+                }
+                for (int I = IL; I <= IM; I++) {
+                    if (A[I - 1][J - 1][K - 1] < 0) {
+                        A[I - 1][J - 1][K - 1] = 0;
+                    }
+                }
+            }
+        }
+        double CM;
+        for (int J = 1; J <= JN; J++) { //to 121
+            int IL = IMIN[J - 1];
+            int IM = IMAX[J - 1] + 1;
+            if (J <= JC) {
+                IM = IN;
+            }
+            if (J < JA1 && J > JA) {
+                IL = IMIN[J - 1] - 1;
+            }
+            if (J < JZ1 && J > JZ) {
+                IL = IMIN[J - 1] - 1;
+            }
+            if (J > JA2) {
+                IL = IMIN[J - 1] - 1;
+            }
+            for (int I = IL; I <= IM; I++) {
+                CM = A[I - 1][J - 1][NMFU1 - 1] + A[I - 1][J - 1][NMFU2 - 1] + A[I - 1][J - 1][NMOX1 - 1] + A[I - 1][J - 1][NMOX2 - 1] + A[I - 1][J - 1][NMPR1 - 1] + A[I - 1][J - 1][NMPR2 - 1] + A[I - 1][J - 1][NMDF - 1];
+                if (CM <= 0) {
+                    continue;
+                }
+                A[I - 1][J - 1][NMFU1 - 1] = A[I - 1][J - 1][NMFU1 - 1] / CM;
+                A[I - 1][J - 1][NMFU2 - 1] = A[I - 1][J - 1][NMFU2 - 1] / CM;
+                A[I - 1][J - 1][NMOX1 - 1] = A[I - 1][J - 1][NMOX1 - 1] / CM;
+                A[I - 1][J - 1][NMOX2 - 1] = A[I - 1][J - 1][NMOX2 - 1] / CM;
+                A[I - 1][J - 1][NMPR1 - 1] = A[I - 1][J - 1][NMPR1 - 1] / CM;
+                A[I - 1][J - 1][NMPR2 - 1] = A[I - 1][J - 1][NMPR2 - 1] / CM;
+                A[I - 1][J - 1][NMDF - 1] = A[I - 1][J - 1][NMDF - 1] / CM;
+            }
+        } //RK4 48
+        double AZK;
+        double ZOKD;
+        double ZGD;
+        double XXX;
+        double AA = 0;
+        double BA = 0;
+        double CA = 0;
+        double DA = 0;
+        double EA = 0;
+        double YYY;
+        double Z;
+        double CK;
+        double CG;
+        double TQ;
+        double TZ;
+        double DY1;
+        double DYY;
+        double ROQ;
+        double ROZ;
+        double ROX;
+        double RK4;
+        double VK1;
+        double RZ1;
+        double RK;
+        double RK1;
+        double RK2 = 0;
+        for (int J = 1; J <= JN; J++) { //to 20
+            int IL = IMIN[J - 1];
+            int IM = IMAX[J - 1] + 1;
+            if (J <= JC) {
+                IM = IL;
+            }
+            if (J < JA1 && J > JA) {
+                IL = IMIN[J - 1] - 1;
+            }
+            if (J < JZ1 && J > JZ) {
+                IL = IMIN[J - 1] - 1;
+            }
+            if (J > JA2) {
+                IL = IMIN[J - 1] - 1;
+            }
+            for (int I = IL; I <= IM; I++) {
+                AZK = A[I - 1][J - 1][NMPR1 - 1] + A[I - 1][J - 1][NMOX2 - 1] + A[I - 1][J - 1][NMDF - 1] + A[I - 1][J - 1][NMPR2 - 1] + A[I - 1][J - 1][NMFU2 - 1];
+                ZOKD = AZK * 0.7966 + A[I - 1][J - 1][NMOX1 - 1];
+                ZGD = AZK * 0.2034 + A[I - 1][J - 1][NMFU1 - 1];
+                if (ZGD < 0.005) {
+                    ZGD = 0.005;
+                }
+                XXX = ZOKD / ZGD / 3.9166;
+                if (XXX <= 0.8) {
+                    AA = 0.02323446;
+                    BA = 5968.083;
+                    CA = 9185.521;
+                    DA = -24199.95;
+                }
+                if (XXX > 0.8) {
+                    if (A[I - 1][J - 1][NK - 1] <= 2) {
+                        AA = -0.3167559;
+                        BA = 10790.7;
+                        CA = -11990.44;
+                        DA = 5632.969;
+                        EA = -969.617;
+                        //goto 2
+                    }
+                    if (XXX > 2) {
+                        AA = -1.954687;
+                        BA = 4416.632;
+                        CA = -2128.663;
+                        DA = 412.6477;
+                        EA = -29.03693;
+                        //goto 5
+                    }
+                }
 
+                // 5
+                YYY = AA + BA * XXX + CA * XXX * XXX + DA * XXX * XXX * XXX + EA * XXX * XXX * XXX * XXX;
+                if (YYY < 293) {
+                    YYY = 293;
+                }
+                Z = A[I - 1][J - 1][NT - 1];
+                CK = 0.3868;
+                CG = 3.332;
+                TQ = 3.332 * A[I - 1][J - 1][NMFU1 - 1] + 14.743 * A[I - 1][J - 1][NMDF - 1] + 1.081 * A[I - 1][J - 1][NMPR1 - 1] + 0.3868 * A[I - 1][J - 1][NMOX1 - 1] + 2.059 * A[I - 1][J - 1][NMPR2 - 1] + 1.105 * A[I - 1][J - 1][NMOX2 - 1] + 1.753 * A[I - 1][J - 1][NMFU2 - 1];
+                TZ = A[I - 1][J - 1][NMU1 - 1] + 4681.06 * A[I - 1][J - 1][NMFU1 - 1] - A[I - 1][J - 1][NMFU2 - 1] * 2299.57 + A[I - 1][J - 1][NMOX2 - 1] * 3949.64 + 8950. * A[I - 1][J - 1][NMPR1 - 1] + 13445.55 * A[I - 1][J - 1][NMPR2 - 1];
+                if (TZ < 0) {
+                    TZ = 0;
+                }
+                if (TQ > 1.E-10) {
+                    A[I - 1][J - 1][NT - 1] = TZ / TQ + 293; // RK4 97
+                    if (XXX > 0.8) {
+                        A[I - 1][J - 1][NT - 1] = A[I - 1][J - 1][NT - 1] * 1.1;
+                    }
+                    if (XXX >= 0.2 && XXX <= 0.8) {
+                        A[I - 1][J - 1][NT - 1] = A[I - 1][J - 1][NT - 1] * 1.2;
+                    }
+                    //goto 50
+                }
+                //50
+                if (A[I - 1][J - 1][NT - 1] < 293) {
+                    A[I - 1][J - 1][NT - 1] = 293;
+                }
+                if (A[I - 1][J - 1][NT - 1] < 4500) {
+                    A[I - 1][J - 1][NT - 1] = 4500;
+                }
+                DY1 = A[I - 1][J - 1][NT - 1] - YYY;
+                DYY = (A[I - 1][J - 1][NT - 1] - YYY) / A[I - 1][J - 1][NT - 1];
+                Z = A[I][J][NRO3];
+                ROQ = A[I - 1][J - 1][NT - 1] * (A[I - 1][J - 1][NMFU1 - 1] / 16. + A[I - 1][J - 1][NMOX1 - 1] / 32. + A[I - 1][J - 1][NMDF - 1] / 2. + A[I - 1][J - 1][NMOX2 - 1] / 28. + A[I - 1][J - 1][NMPR1 - 1] / 44. + A[I - 1][J - 1][NMPR2 - 1] / 18. + A[I - 1][J - 1][NMFU2 - 1] / 17.);
+                if (ROQ != 0) {
+                    ROZ = A[I - 1][J - 1][NMOX1 - 1] + A[I - 1][J - 1][NMOX2 - 1] + A[I - 1][J - 1][NMDF - 1] + A[I - 1][J - 1][NMFU1 - 1] + A[I - 1][J - 1][NMPR1 - 1] + A[I - 1][J - 1][NMPR2 - 1] + A[I - 1][J - 1][NMFU2 - 1];
+                    ROX = PKS[I - 1] / 8314.4;
+                    A[I - 1][J - 1][NRO3 - 1] = ROX * ROZ / ROQ;
+                    A[I - 1][J - 1][NRO3 - 1] = Z + (A[I - 1][J - 1][NRO3 - 1] - Z) * RL;
+                    //goto 60
+                }
+                // 60
+                if (A[I - 1][J - 1][NRO3 - 1] < 0.00001) {
+                    A[I - 1][J - 1][NRO3 - 1] = 0.00001;
+                }
+                // 20 RK4 118
+            }// 20
+        }// 20
+        RK4 = 0;
+        for (int J = 2; J <= JA3; J++) {
+            RK4 = RK4 + 3.1416 * (A[IC2 - 1][J - 1][NF - 1] - A[IC2 - 1][J - 1 - 1][NF - 1]) * (Math.pow(A[IC2 - 1][J - 1][NV1 - 1], 2) + Math.pow(A[IC2 - 1][J - 1][NMU2 - 1], 2));
+        }
+        for (int J = 1; J <= JN; J++) {
+            int IL = IMIN[J - 1];
+            int IM = IMAX[J - 1] + 1;
+            if (J == JC) {
+                IM = IN;
+            }
+            for (int I = IL; I <= IM; I++) {
+                VK1 = Math.pow((VINP * VINP + Math.pow((A[1 - 1][JA - 1][NMU2 - 1] / R[JA - 1 - 1]), 2)), 0.5);
+                RZ1 = Math.pow((2. * R[JN - 1]), 0.666) / Math.pow((X1[IC1 - 1]), 0.333);
+                if (I <= IC2) {
+                    RZ1 = Math.pow((2 * R[JA3 - 1]), 0.666) / Math.pow((X1[IC1 - 1]), 0.333);
+                }
+                RK= 3.1416*(R[JA2-1]*R[JA2-1]-R[JA1-1]*R[JA1-1])*ROS*Math.pow(VINS,3);
+                RK1=3.1416*(R[JA-1]-R[JZ1-1])*(R[JA-1]+R[JZ1-1])*ROP*VINP*VINP*VINP+3.1416*R[JZ-1]*R[JZ-1]*A[1-1][2-1][NRO3-1]*Math.pow(VINS1,3);
+                if(I > IC2) {
+                    RK2 = RK + RK4;
+                }
+                if(I <= IC2) {
+                    RK2 = RK1;
+                }
+                A[I-1][J-1][NMU-1]=0.012*RZ1*Math.pow(A[I-1][J-1][NRO3-1],0.666)*Math.pow(RK2,0.333);
+                A[I-1][J-1][NMU-1]=A[I-1][J-1][NMU-1]*2;
+            }
+        }
     }
 
     private static void grid(int N1, int N2, int N3, double[][][] A) {
