@@ -258,6 +258,23 @@ public class HelloApplication {
     }
 
     private static void print1(int N1, int N2, int N3, double[][][] A, int IV) {
+        String format101 = "%2s%11.3f%11.3f%11.3f%11.3f%11.3f%11.3f%n";
+        String format102 = "%1s     %2s         %3s         %4s         %5s         %6s    X1(I)      %7s      X2(J)%n";
+
+        write9(String.format(format102, "", "2", "3", "4", "5", "6", "9", "10", "11", "12", "13"));
+        for (int J = 0; J < JN; J++) {
+            for (int I = 0; I < IN; I++) {
+                write9(String.format(format101, "", A[I][J][2], A[I][J][3], A[I][J][4], A[I][J][5], A[I][J][6], X1[I], X2[J]));
+            }
+        }
+        // Записываем вторую строку данных
+        write9(String.format(format102, "", "2", "3", "4", "5", "6", "9", "10", "11", "12", "13"));
+        for (int J = 0; J < JN; J++) {
+            for (int I = 0; I < IN; I++) {
+                write9(String.format(format101, "", A[I][J][9], A[I][J][10], A[I][J][11], A[I][J][12], A[I][J][13], X1[I], X2[J]));
+            }
+        }
+
     }
 
     private static void eqn(int N1, int N2, int N3, double[][][] A) {
@@ -625,49 +642,52 @@ public class HelloApplication {
                 IM = IC - 1;
             }
             for (int I = IL; I <= IM; I++) { // to 82
+                boolean goto331 = false;
+                boolean goto33 = false;
+                boolean goto304 = false;
                 if (NITER != 18) {
-                    //goto 331
+                    goto331 = true;
                 }
-                if (I >= 3 && I <= 11 && J > JZ && J < JA1) {
-                    //goto 33
+                if (I >= 3 && I <= 11 && J > JZ && J < JA1 && !goto331) {
+                    goto33 = true;
                 }
-                if (A[I - 1][J - 1][NT - 1] < ROM1) { //331
-                    //goto 304
+                if (A[I - 1][J - 1][NT - 1] < ROM1 && goto331 && !goto33) { //331
+                    goto304 = true;
                 }
                 //33
-                if (A[I - 1][J - 1][NMFU1 - 1] <= 1.E-20) {
-                    //goto 82
+                if (goto33 && !goto304) {
+                    if (A[I - 1][J - 1][NMFU1 - 1] <= 1.E-20) {
+                        continue;
+                    }
+                    ZNK = A[I - 1][J - 1][NMOX1 - 1] / A[I - 1][J - 1][NMFU1 - 1];
+                    if (ZNK > 3.9166) {
+                        A[I - 1][J - 1][NMPR1 - 1] = A[I - 1][J - 1][NMPR1 - 1] + (8. * 44. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
+                        A[I - 1][J - 1][NMOX2 - 1] = A[I - 1][J - 1][NMOX2 - 1] + (28. * 16. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
+                        A[I - 1][J - 1][NMDF - 1] = A[I - 1][J - 1][NMDF - 1] + (4. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
+                        A[I - 1][J - 1][NMPR2 - 1] = A[I - 1][J - 1][NMPR2 - 1] + (30. * 18. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
+                        A[I - 1][J - 1][NMFU2 - 1] = A[I - 1][J - 1][NMFU2 - 1] + (32. * 17. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
+                        A[I - 1][J - 1][NMOX1 - 1] = A[I - 1][J - 1][NMOX1 - 1] - (47. * 32. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
+                        if (A[I - 1][J - 1][NMOX1 - 1] < 1.E-20) {
+                            A[I - 1][J - 1][NMOX1 - 1] = 1.E-20;
+                        }
+                        A[I - 1][J - 1][NMFU1 - 1] = 1.E-20;
+                    } else {
+                        A[I - 1][J - 1][NMPR1 - 1] = A[I - 1][J - 1][NMPR1 - 1] + (8. * 44. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
+                        A[I - 1][J - 1][NMOX2 - 1] = A[I - 1][J - 1][NMOX2 - 1] + (16. * 28. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
+                        A[I - 1][J - 1][NMDF - 1] = A[I - 1][J - 1][NMDF - 1] + (4. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
+                        A[I - 1][J - 1][NMPR2 - 1] = A[I - 1][J - 1][NMPR2 - 1] + (30. * 18. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
+                        A[I - 1][J - 1][NMFU2 - 1] = A[I - 1][J - 1][NMFU2 - 1] + (32. * 17. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
+                        A[I - 1][J - 1][NMFU1 - 1] = A[I - 1][J - 1][NMFU1 - 1] - (24. * 16. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
+                        if (A[I - 1][J - 1][NMFU1 - 1] < 1.E-20) {
+                            A[I - 1][J - 1][NMFU1 - 1] = 1.E-20;
+                        }
+                        A[I - 1][J - 1][NMOX1 - 1] = 1.E-20;
+                    }
                 }
-                ZNK = A[I - 1][J - 1][NMOX1 - 1] / A[I - 1][J - 1][NMFU1 - 1];
-                if (ZNK > 3.9166) {
-                    //goto 83
-                }
-                A[I - 1][J - 1][NMPR1 - 1] = A[I - 1][J - 1][NMPR1 - 1] + (8. * 44. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
-                A[I - 1][J - 1][NMOX2 - 1] = A[I - 1][J - 1][NMOX2 - 1] + (16. * 28. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
-                A[I - 1][J - 1][NMDF - 1] = A[I - 1][J - 1][NMDF - 1] + (4. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
-                A[I - 1][J - 1][NMPR2 - 1] = A[I - 1][J - 1][NMPR2 - 1] + (30. * 18. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
-                A[I - 1][J - 1][NMFU2 - 1] = A[I - 1][J - 1][NMFU2 - 1] + (32. * 17. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
-                A[I - 1][J - 1][NMFU1 - 1] = A[I - 1][J - 1][NMFU1 - 1] - (24. * 16. / 32. / 47.) * A[I - 1][J - 1][NMOX1 - 1];
-                if (A[I - 1][J - 1][NMFU1 - 1] < 1.E-20) {
-                    A[I - 1][J - 1][NMFU1 - 1] = 1.E-20;
-                }
-                A[I - 1][J - 1][NMOX1 - 1] = 1.E-20;
-                //goto 304
-                //83
-                A[I - 1][J - 1][NMPR1 - 1] = A[I - 1][J - 1][NMPR1 - 1] + (8. * 44. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
-                A[I - 1][J - 1][NMOX2 - 1] = A[I - 1][J - 1][NMOX2 - 1] + (28. * 16. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
-                A[I - 1][J - 1][NMDF - 1] = A[I - 1][J - 1][NMDF - 1] + (4. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
-                A[I - 1][J - 1][NMPR2 - 1] = A[I - 1][J - 1][NMPR2 - 1] + (30. * 18. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
-                A[I - 1][J - 1][NMFU2 - 1] = A[I - 1][J - 1][NMFU2 - 1] + (32. * 17. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
-                A[I - 1][J - 1][NMOX1 - 1] = A[I - 1][J - 1][NMOX1 - 1] - (47. * 32. / 24. / 16.) * A[I - 1][J - 1][NMFU1 - 1];
-                if (A[I - 1][J - 1][NMOX1 - 1] < 1.E-20) {
-                    A[I - 1][J - 1][NMOX1 - 1] = 1.E-20;
-                }
-                A[I - 1][J - 1][NMFU1 - 1] = 1.E-20;
-                //goto 304 RK3 237
+                //304 RK3 237
                 CM = A[I - 1][J - 1][NMFU1 - 1] + A[I - 1][J - 1][NMFU2 - 1] + A[I - 1][J - 1][NMOX1 - 1] + A[I - 1][J - 1][NMOX2 - 1] + A[I - 1][J - 1][NMPR1 - 1] + A[I - 1][J - 1][NMPR2 - 1] + A[I - 1][J - 1][NMDF - 1];
                 if (Math.abs(CM) <= 1.E-20) {
-                    //goto 82
+                    continue;
                 }
                 A[I - 1][J - 1][NMFU1 - 1] = A[I - 1][J - 1][NMFU1 - 1] / CM;
                 A[I - 1][J - 1][NMFU2 - 1] = A[I - 1][J - 1][NMFU2 - 1] / CM;
@@ -677,12 +697,10 @@ public class HelloApplication {
                 A[I - 1][J - 1][NMPR2 - 1] = A[I - 1][J - 1][NMPR2 - 1] / CM;
                 A[I - 1][J - 1][NMDF - 1] = A[I - 1][J - 1][NMDF - 1] / CM;
                 if (Math.abs(FKS[I - 1][J - 1]) < 1.E-22) {
-                    //goto 787
+                    RS = 1;
+                } else {
+                    RS = 1 - A[I - 1][J - 1][NMFU1 - 1] / FKS[I - 1][J - 1];
                 }
-                RS = 1 - A[I - 1][J - 1][NMFU1 - 1] / FKS[I - 1][J - 1];
-                //goto 789
-                RS = 1; // 787
-                //789
                 if (Math.abs(FKS[I - 1][J - 1]) < 1.E-22 && Math.abs(A[I - 1][J - 1][NMFU1 - 1]) < 1.E-22) {
                     RS = 0;
                 }
@@ -690,12 +708,10 @@ public class HelloApplication {
                     RSDU[NMFU1 - 1] = Math.abs(RS);
                 }
                 if (Math.abs(TKS[I - 1][J - 1]) < 1.E-22) {
-                    //goto 393
+                    RS = 1; //393
+                } else {
+                    RS = 1 - A[I - 1][J - 1][NMOX1 - 1] / TKS[I - 1][J - 1];
                 }
-                RS = 1 - A[I - 1][J - 1][NMOX1 - 1] / TKS[I - 1][J - 1];
-                //goto 399
-                RS = 1; //393
-                //399
                 if (Math.abs(TKS[I - 1][J - 1]) < 1.E-22 && Math.abs(A[I - 1][J - 1][NMOX1 - 1]) < 1.E-22) {
                     RS = 0;
                 }
@@ -704,25 +720,324 @@ public class HelloApplication {
                 }
                 FKS[I - 1][J - 1] = 0;
                 TKS[I - 1][J - 1] = 0;
-                //82
-                bound(N1, N2, N3, A);
+            }
+        }
+        bound(N1, N2, N3, A);
+    }
+
+    private static void bound(int N1, int N2, int N3, double[][][] A) {
+        double WX;
+        double WY;
+        double WZ;
+        double Z;
+        int JA17 = JA + 1;
+        int JA18 = JA1 - 1;
+        RL = 1.;
+        for (int J = JA17; J <= JN; J++) {
+            int IL = IMIN[J-1];
+            if (J == JA3) {
+                IL = IC2 + 1;
+            }
+            for (int K = 3; K <= 10; K++) {
+                if (J > JA18 && J <= JA2) {
+                    continue; // Пропускаем итерацию, если условие выполняется
+                }
+                A[IL - 1-1][J-1][K-1] = A[IL-1][J-1][K-1];
+            }
+        }
+        for (int J = JA; J <= JNM; J++) {
+            int IL = IMIN[J-1];
+            if (J == JA3) {
+                IL = IC2 + 1;
+            }
+            if (J > JA1 && J < JA2) {
+                continue;
+            }
+
+            WX = (A[IL-1][J-1][NF-1] - A[IL - 1-1][J-1][NF-1]) / Math.pow((R[J-1] * X1[IL-1]), 2);
+            WY = A[IL-1][J-1][NW-1] * ((A[IL - 1-1][J-1][NRO3-1]) / 6.0 + (A[IL-1][J-1][NRO3-1] - A[IL - 1-1][J-1][NRO3-1]) / 8.0);
+            WZ = A[IL - 1-1][J-1][NRO3-1] / 3.0 + 5.0 * (A[IL-1][J-1][NRO3-1] - A[IL - 1-1][J-1][NRO3-1]) / 24.0;
+            A[IL - 1-1][J-1][NW-1] = -1.0 * (WX + WY) / WZ;
+
+            if (A[IL - 1-1][J-1][NW-1] >= 1.0E+14) {
+                A[IL - 1-1][J-1][NW-1] = 1.0E+14;
+            }
+            if (A[IL - 1-1][J-1][NW-1] <= -1.0E+14) {
+                A[IL - 1-1][J-1][NW-1] = -1.0E+14;
+            }
+            if (NITER <= NPRINT) {
+                A[IL - 1-1][J-1][NW-1] = 0.0;
+            }
+        }
+        for (int J = JZ; J <= JZ1; J++) {
+            WX = (A[2-1][J-1][NF-1] - A[1-1][J-1][NF-1]) / Math.pow((R[J-1] * X1[2-1]), 2);
+            WY = A[2-1][J-1][NW-1] * ((A[1-1][J-1][NRO3-1]) / 6.0 + (A[2-1][J-1][NRO3-1] - A[1-1][J-1][NRO3-1]) / 8.0);
+            WZ = A[1-1][J-1][NRO3-1] / 3.0 + 5.0 * (A[2-1][J-1][NRO3-1] - A[1-1][J-1][NRO3-1]) / 24.0;
+            A[1-1][J-1][NW-1] = -1.0 * (WX + WY) / WZ;
+
+            if (A[1-1][J-1][NW-1] >= 1.0E+14) {
+                A[1-1][J-1][NW-1] = 1.0E+14;
+            }
+            if (A[1-1][J-1][NW-1] <= -1.0E+14) {
+                A[1-1][J-1][NW-1] = -1.0E+14;
+            }
+            if (NITER <= NPRINT && NVAR == 1) {
+                A[1-1][J-1][NW-1] = 0.0;
+            }
+        }
+        int JZ17 = JZ + 1;
+        int JZ18 = JZ1 - 1;
+        for (int J = JZ17; J <= JZ18; J++) {
+            for (int K = 3; K <= 10; K++) {
+                A[1-1][J-1][K-1] = A[2-1][J-1][K-1];
+            }
+        }
+        for (int J = JC1; J <= JB; J++) {
+            for (int K = 3; K <= 10; K++) {
+                int KK = IMAX[J-1] + 1;
+                A[KK-1][J-1][K-1] = A[KK-1][J - 1-1][K-1];
+            }
+        }
+        double DX2;
+        double WK;
+        for (int J = JC1; J <= JB; J++) {
+            DX2 = X2[J-1] - X2[J-1 - 1];
+            int KK = IMAX[J-1] + 1;
+            WK = 1.0;
+            WX = A[KK-1][J - 1-1][NF-1] / (DX2 * DX2);
+            WY = A[KK-1][J - 1-1][NW-1] * ((R[J-1] - WK * DX2) * ((A[KK-1][J-1][NRO3-1] * (R[J-1] / 6.0 - WK * DX2 / 8.0)) + (A[KK-1][J - 1-1][NRO3-1] - A[KK-1][J-1][NRO3-1]) * (R[J-1] / 8.0 - WK * DX2 / 10.0)));
+            WZ = R[J-1] * ((A[KK-1][J-1][NRO3-1] * (R[J-1] / 3.0 - 5.0 * WK * DX2 / 24.0)) + ((A[KK-1][J - 1-1][NRO3-1] - A[KK-1][J-1][NRO3-1]) * (5.0 * R[J-1] / 24.0 - 3.0 * WK * DX2 / 20.0)));
+            A[KK-1][J-1][NW-1] = -1.0 * (WX + WY) / WZ;
+
+            if (NITER <= NPRINT) {
+                A[KK-1][J-1][NW-1] = 0.0;
+            }
+            if (A[KK-1][J-1][NW-1] >= 1.0E+14) {
+                A[KK-1][J-1][NW-1] = 1.0E+14;
+            }
+            if (A[KK-1][J-1][NW-1] <= -1.0E+14) {
+                A[KK-1][J-1][NW-1] = -1.0E+14;
+            }
+        }
+        double DX1 = X1[IC2-1] - X1[IC2 - 1-1];
+        for (int I = 2; I <= IC2; I++) {
+            for (int K = 3; K <= 10; K++) {
+                A[I-1][JA3-1][K-1] = A[I-1][JA3 - 1-1][K-1];
+            }
+        }
+        DX2 = X2[JA3-1] - X2[JA3 - 1-1];
+        WK = 1.0;
+        int IC17 = IC2 - 1;
+        for (int I = 2; I <= IC17; I++) {
+            Z = A[I-1][JA3-1][NW-1];
+            WX = (A[I-1][JA3 - 1-1][NF-1] - A[I-1][JA3-1][NF-1]) / (DX2 * DX2);
+            WY = A[I-1][JA3 - 1-1][NW-1] * (R[JA3-1] - WK * DX2) * (A[I-1][JA3-1][NRO3-1] * (R[JA3-1] / 6.0 - WK * DX2 / 8.0) + (A[I-1][JA3 - 1-1][NRO3-1] - A[I-1][JA3-1][NRO3-1]) * (R[JA3-1] / 8.0 - WK * DX2 / 10.0));
+            WZ = R[JA3-1] * (A[I-1][JA3-1][NRO3-1] * (R[JA3-1] / 3.0 - 5.0 * WK * DX2 / 24.0) + (A[I-1][JA3 - 1-1][NRO3-1] - A[I-1][JA3-1][NRO3-1]) * (5.0 * R[JA3-1] / 24.0 - 3.0 * WK * DX2 / 20.0));
+            A[I-1][JA3-1][NW-1] = -1.0 * (WX + WY) / WZ;
+
+            if (NITER <= NPRINT) {
+                A[I-1][JA3-1][NW-1] = 0.0;
+            }
+            if (A[I-1][JA3-1][NW-1] > 1.0E+14) {
+                A[I-1][JA3-1][NW-1] = 1.0E+14;
+            }
+            if (A[I-1][JA3-1][NW-1] < -1.0E+14) {
+                A[I-1][JA3-1][NW-1] = -1.0E+14;
+            }
+        }
+        int IC15 = IC2 + 1;
+        int IC57 = IC1;
+        for (int I = IC15; I <= IC57; I++) {
+            for (int K = 3; K <= 10; K++) {
+                A[I-1][JN-1][K-1] = A[I-1][JN - 1-1][K-1];
+            }
+        }
+        DX2 = X2[JB1-1] - X2[JB1 - 1-1];
+        WK = 1.0;
+        for (int I = IC15; I <= IC57; I++) {
+            Z = A[I-1][JB1-1][NW-1];
+            WX = (A[I-1][JB1 - 1-1][NF-1] - A[I-1][JB1-1][NF-1]) / (DX2 * DX2);
+            WY = A[I-1][JB1 - 1-1][NW-1] * (R[JB1-1] - WK * DX2) * (A[I-1][JB1-1][NRO3-1] * (R[JB1-1] / 6.0 - WK * DX2 / 8.0) + (A[I-1][JB1 - 1-1][NRO3-1] - A[I-1][JB1-1][NRO3-1]) * (R[JB1-1] / 8.0 - WK * DX2 / 10.0));
+            WZ = R[JB1-1] * (A[I-1][JB1-1][NRO3-1] * (R[JB1-1] / 3.0 - 5.0 * WK * DX2 / 24.0) + (A[I-1][JB1 - 1-1][NRO3-1] - A[I-1][JB1-1][NRO3-1]) * (5.0 * R[JB1-1] / 24.0 - 3.0 * WK * DX2 / 20.0));
+            A[I-1][JB1-1][NW-1] = -1.0 * (WX + WY) / WZ;
+
+            if (NITER <= NPRINT) {
+                A[I-1][JB1-1][NW-1] = 0.0;
+            }
+            if (A[I-1][JB1-1][NW-1] >= 1.0E+14) {
+                A[I-1][JB1-1][NW-1] = 1.0E+14;
+            }
+            if (A[I-1][JB1-1][NW-1] <= -1.0E+14) {
+                A[I-1][JB1-1][NW-1] = -1.0E+14;
+            }
+        }
+
+
+        for (int I = IC; I <= INM; I++) {
+            for (int K = 3; K <= 10; K++) {
+                A[I-1][JC-1][K-1] = A[I-1][JC - 1-1][K-1];
+            }
+        }
+
+        WK = 1.0;
+        DX2 = X2[JC-1] - X2[JC -1- 1];
+        for (int I = IC; I <= IN; I++) {
+            Z = A[I-1][JC-1][NW-1];
+            WX = A[I-1][JC - 1-1][NF-1] / (DX2 * DX2);
+            WY = A[I-1][JC - 1-1][NW-1] * (R[JC-1] - WK * DX2) * (A[I-1][JC-1][NRO3-1] * (R[JC-1] / 6.0 - WK * DX2 / 8.0)
+                    + (A[I-1][JC -1- 1][NRO3-1] - A[I-1][JC-1][NRO3-1]) * (R[JC-1] / 8.0 - WK * DX2 / 10.0));
+            WZ = R[JC-1] * (A[I-1][JC-1][NRO3-1] * (R[JC-1] / 3.0 - 5.0 * WK * DX2 / 24.0)
+                    + (A[I-1][JC -1- 1][NRO3-1] - A[I-1][JC-1][NRO3-1]) * (5.0 * R[JC-1] / 24.0 - 3.0 * WK * DX2 / 20.0));
+            A[I-1][JC-1][NW-1] = -1.0 * (WX + WY) / WZ;
+
+            if (NITER <= NPRINT) {
+                A[I-1][JC-1][NW-1] = 0.0;
+            }
+            if (A[I-1][JC-1][NW-1] >= 1.0E+14) {
+                A[I-1][JC-1][NW-1] = 1.0E+14;
+            }
+            if (A[I-1][JC-1][NW-1] <= -1.0E+14) {
+                A[I-1][JC-1][NW-1] = -1.0E+14;
+            }
+        }
+
+        for (int I = 2; I <= INM; I++) {
+            for (int K = 3; K <= 10; K++) {
+                A[I-1][1-1][K-1] = A[I-1][2-1][K-1];
+                if (NCORD == 1) {
+                    A[I-1][1-1][NW-1] = 0.0;
+                }
+                if (NCORD == 2) {
+                    A[I-1][1-1][NW-1] = A[I-1][2-1][NW-1] + (X2[2-1] / (X2[3-1] - X2[2-1])) * (A[I-1][2-1][NW-1] - A[I-1][3-1][NW-1]);
+                }
+                if (A[I-1][1-1][NW-1] >= 1.0E+14) {
+                    A[I-1][1-1][NW-1] = 1.0E+14;
+                }
+                if (A[I-1][1-1][NW-1] <= -1.0E+14) {
+                    A[I-1][1-1][NW-1] = -1.0E+14;
+                }
+            }
+        }
+        for (int K = 1; K <= N3; K++) {
+            for (int J = 1; J <= JC; J++) {
+                A[IN-1][J-1][K-1] = A[IN -1- 1][J-1][K-1];
             }
         }
     }
 
-    private static void bound(int N1, int N2, int N3, double[][][] A) {
-    }
-
-    private static double sorce(int N1, int N2, int N3, double[][][] A, double SOURCE, int I, int J, int NW) {
+    private static double sorce(int N1, int N2, int N3, double[][][] A, double SOURCE, int I, int J, int K) {
+        switch (K) {
+            case 1 -> SOURCE = UKS[I - 1][J - 1];
+            case 2 -> SOURCE = A[I - 1][J - 1][NW - 1];
+            case 3 -> SOURCE = 0;
+            case 4 -> SOURCE = 0;
+            case 5 -> SOURCE = 0;
+            case 6 -> SOURCE = 0;
+            default -> SOURCE = 0;
+        }
         return SOURCE;
     }
 
     private static void convec(int N1, int N2, int N3, double[][][] A) {
-
+        RL = 1.0;
+        for (int J = 2; J <= JNM; J++) {
+            int IL = IMIN[J - 1];
+            int IM = IMAX[J - 1];
+            if (J == JA3) IL = IC2 + 1;
+            if (J == JC) IM = IC - 1;
+            for (int I = IL; I <= IM; I++) {
+                double DV = R[J - 1] * (X1[I + 1 - 1] - X1[I - 1 - 1]) * (X2[J + 1 - 1] - X2[J - 1 - 1]);
+                double G1PW = (A[I - 1][J + 1 - 1][NF - 1] - A[I - 1][J - 1 - 1][NF - 1] + A[I - 1 - 1][J + 1 - 1][NF - 1] - A[I - 1 - 1][J - 1 - 1][NF - 1]) / DV;
+                double G1PE = (A[I - 1][J + 1 - 1][NF - 1] - A[I - 1][J - 1 - 1][NF - 1] + A[I + 1 - 1][J + 1 - 1][NF - 1] - A[I + 1 - 1][J - 1 - 1][NF - 1]) / DV;
+                double G2PS = (A[I - 1 - 1][J - 1][NF - 1] - A[I - 1 + 1][J - 1][NF - 1] + A[I - 1 - 1][J - 1 - 1][NF - 1] - A[I + 1 - 1][J - 1 - 1][NF - 1]) / DV;
+                double G2PN = (A[I - 1 - 1][J - 1][NF - 1] - A[I - 1 + 1][J - 1][NF - 1] + A[I - 1 - 1][J + 1 - 1][NF - 1] - A[I + 1 - 1][J + 1 - 1][NF - 1]) / DV;
+                AE[I - 1][J - 1] = 0.5 * (Math.abs(G1PE) - G1PE);
+                AW[I - 1][J - 1] = 0.5 * (Math.abs(G1PW) + G1PW);
+                AN[I - 1][J - 1] = 0.5 * (Math.abs(G2PN) - G2PN);
+                AS[I - 1][J - 1] = 0.5 * (Math.abs(G2PS) + G2PS);
+                double BPP = A[I - 1][J - 1][NMU - 1];
+                double BBE = (A[I + 1 - 1][J - 1][NMU - 1] + BPP) * BE[I - 1];
+                double BBW = (A[I - 1 - 1][J - 1][NMU - 1] + BPP) * BW[I - 1];
+                double BBN = (A[I - 1][J + 1 - 1][NMU - 1] + BPP) * BN[J - 1];
+                double BBS = (A[I - 1][J - 1 - 1][NMU - 1] + BPP) * BS[J - 1];
+                AE1[I - 1][J - 1] = AE[I - 1][J - 1] + BBE;
+                AW1[I - 1][J - 1] = AW[I - 1][J - 1] + BBW;
+                AN1[I - 1][J - 1] = AN[I - 1][J - 1] + BBN;
+                AS1[I - 1][J - 1] = AS[I - 1][J - 1] + BBS;
+            }
+        }
     }
 
     private static void veldis(int N1, int N2, int N3, double[][][] A) {
-
+        double H2;
+        double RX2;
+        double H1;
+        double RX1;
+        for (int J = 2; J <= JNM; J++) {
+            H2 = (X2[J - 1] - X2[J - 1 - 1]) / (X2[J + 1 - 1] - X2[J - 1]);
+            RX2 = R[J - 1] * (X2[J + 1 - 1] - X2[J - 1 - 1]);
+            int IL = IMIN[J - 1];
+            int IM = IMAX[J - 1];
+            if (J == JA3) IL = IC2 + 1;
+            if (J == JC) IM = IC - 1;
+            for (int I = IL; I <= IM; I++) {
+                H1 = (X1[I - 1 - 1] - X1[I - 1]) / (X1[I + 1 - 1] - X1[I - 1]);
+                RX1 = R[J - 1] * (X1[I + 1 - 1] - X1[I - 1 - 1]);
+                A[I - 1][J - 1][NV1 - 1] = (A[I - 1][J + 1 - 1][NF - 1] - A[I - 1][J - 1][NF - 1]) * H2 + (A[I - 1][J - 1][NF - 1] - A[I - 1][J - 1 - 1][NF - 1]) / H2;
+                A[I - 1][J - 1][NV1 - 1] = A[I - 1][J - 1][NV1 - 1] / RX2 / A[I - 1][J - 1][NRO3 - 1];
+                A[I - 1][J - 1][NV2 - 1] = (A[I + 1 - 1][J - 1][NF - 1] - A[I - 1][J - 1][NF - 1]) * H1 + (A[I - 1][J - 1][NF - 1] - A[I - 1 - 1][J - 1][NF - 1]) / H1;
+                A[I - 1][J - 1][NV2 - 1] = A[I - 1][J - 1][NV2 - 1] / RX1 / A[I - 1][J - 1][NRO3 - 1];
+                if (NITER >= 85 && Math.abs(A[I - 1][J - 1][NV1 - 1]) >= 27000.0) NITER = NITER + 1000;
+            }
+        }
+        double DELX2 = X2[1] - X2[0];
+        for (int I = 2; I <= INM; I++) {
+            A[I - 1][1 - 1][NV1 - 1] = (A[I - 1][2 - 1][NF - 1] - A[I - 1][1 - 1][NF - 1]) / DELX2 / A[I - 1][1 - 1][NRO3 - 1] / 0.5 / R[2 - 1];
+        }
+        for (int J = 2; J <= JNM; J++) {
+            int IL = IMIN[J - 1];
+            int IM = IMAX[J - 1];
+            if (J == JA3) IL = IC2 + 1;
+            if (J == JC) IM = IC - 1;
+            for (int I = IL; I <= IM; I++) {
+                VS[I - 1][J - 1] = 0.5 * (A[I - 1][J - 1][NV1 - 1] * A[I - 1][J - 1][NV1 - 1] + A[I - 1][J - 1][NV2 - 1] * A[I - 1][J - 1][NV2 - 1]);
+                FKS[I - 1][J - 1] = Math.pow(A[I - 1][J - 1][NMU2 - 1] / R[J - 1], 2) * A[I - 1][J - 1][NRO3 - 1];
+            }
+        }
+        double DIF1;
+        double DIF2;
+        double DIF3;
+        double DIF4;
+        double DIF5;
+        double S1;
+        double S2;
+        for (int J = 2; J <= JNM; J++) {
+            int IL = IMIN[J - 1];
+            int IM = IMAX[J - 1];
+            if (J == JA3) IL = IC2 + 1;
+            if (J == JC) IM = IC - 1;
+            for (int I = IL; I <= IM; I++) {
+                DIF1 = ((VS[I + 1 - 1][J - 1] - VS[I - 1][J - 1]) * (X1[I - 1] - X1[I - 1 - 1]) /
+                        (X1[I + 1 - 1] - X1[I - 1]) + (VS[I - 1][J - 1] - VS[I - 1 - 1][J - 1]) * (X1[I + 1 - 1] - X1[I - 1]) /
+                        (X1[I - 1] - X1[I - 1 - 1])) / (X1[I + 1 - 1] - X1[I - 1 - 1]);
+                DIF2 = ((VS[I - 1][J + 1 - 1] - VS[I - 1][J - 1]) * (X2[J - 1] - X2[J - 1 - 1]) /
+                        (X2[J + 1 - 1] - X2[J - 1]) + (VS[I - 1][J - 1] - VS[I - 1][J - 1 - 1]) * (X2[J + 1 - 1] - X2[J - 1]) /
+                        (X2[J - 1] - X2[J - 1 - 1])) / (X2[J + 1 - 1] - X2[J - 1 - 1]);
+                DIF3 = ((A[I + 1 - 1][J - 1][NRO3 - 1] - A[I - 1][J - 1][NRO3 - 1]) * (X1[I - 1] - X1[I - 1 - 1]) /
+                        (X1[I + 1 - 1] - X1[I - 1]) + (A[I - 1][J - 1][NRO3 - 1] - A[I - 1 - 1][J - 1][NRO3 - 1]) * (X1[I + 1 - 1] - X1[I - 1]) /
+                        (X1[I - 1] - X1[I - 1 - 1])) / (X1[I + 1 - 1] - X1[I - 1 - 1]);
+                DIF4 = ((A[I - 1][J + 1 - 1][NRO3 - 1] - A[I - 1][J - 1][NRO3 - 1]) * (X2[J - 1] - X2[J - 1 - 1]) /
+                        (X2[J + 1 - 1] - X2[J - 1]) + (A[I - 1][J - 1][NRO3 - 1] - A[I - 1][J - 1 - 1][NRO3 - 1]) * (X2[J + 1 - 1] - X2[J - 1]) /
+                        (X2[J - 1] - X2[J - 1 - 1])) / (X2[J + 1 - 1] - X2[J - 1 - 1]);
+                DIF5 = 0.0;
+                DIF5 = ((FKS[I + 1 - 1][J - 1] - FKS[I - 1][J - 1]) * (X1[I - 1] - X1[I - 1 - 1]) /
+                        (X1[I + 1 - 1] - X1[I - 1]) + (FKS[I - 1][J - 1] - FKS[I - 1 - 1][J - 1]) * (X1[I + 1 - 1] - X1[I - 1]) /
+                        (X1[I - 1] - X1[I - 1 - 1])) / (X1[I + 1 - 1] - X1[I - 1 - 1]);
+                S1 = DIF1 * DIF4;
+                S2 = DIF2 * DIF3;
+                UKS[I - 1][J - 1] = R[J - 1] * (S1 - S2) - DIF5;
+            }
+        }
     }
 
     private static void viscos(int N1, int N2, int N3, double[][][] A) {
@@ -915,21 +1230,144 @@ public class HelloApplication {
                 if (I <= IC2) {
                     RZ1 = Math.pow((2 * R[JA3 - 1]), 0.666) / Math.pow((X1[IC1 - 1]), 0.333);
                 }
-                RK= 3.1416*(R[JA2-1]*R[JA2-1]-R[JA1-1]*R[JA1-1])*ROS*Math.pow(VINS,3);
-                RK1=3.1416*(R[JA-1]-R[JZ1-1])*(R[JA-1]+R[JZ1-1])*ROP*VINP*VINP*VINP+3.1416*R[JZ-1]*R[JZ-1]*A[1-1][2-1][NRO3-1]*Math.pow(VINS1,3);
-                if(I > IC2) {
+                RK = 3.1416 * (R[JA2 - 1] * R[JA2 - 1] - R[JA1 - 1] * R[JA1 - 1]) * ROS * Math.pow(VINS, 3);
+                RK1 = 3.1416 * (R[JA - 1] - R[JZ1 - 1]) * (R[JA - 1] + R[JZ1 - 1]) * ROP * VINP * VINP * VINP + 3.1416 * R[JZ - 1] * R[JZ - 1] * A[1 - 1][2 - 1][NRO3 - 1] * Math.pow(VINS1, 3);
+                if (I > IC2) {
                     RK2 = RK + RK4;
                 }
-                if(I <= IC2) {
+                if (I <= IC2) {
                     RK2 = RK1;
                 }
-                A[I-1][J-1][NMU-1]=0.012*RZ1*Math.pow(A[I-1][J-1][NRO3-1],0.666)*Math.pow(RK2,0.333);
-                A[I-1][J-1][NMU-1]=A[I-1][J-1][NMU-1]*2;
+                A[I - 1][J - 1][NMU - 1] = 0.012 * RZ1 * Math.pow(A[I - 1][J - 1][NRO3 - 1], 0.666) * Math.pow(RK2, 0.333);
+                A[I - 1][J - 1][NMU - 1] = A[I - 1][J - 1][NMU - 1] * 2;
             }
         }
     }
 
     private static void grid(int N1, int N2, int N3, double[][][] A) {
+        int NIG = 0;
+        NIG = NIG + 1;
+        X2[JZ - 1] = DCMB / 2.0;
+        X2[JZ1 - 1] = DOGOR / 2.0;
+        X2[JA - 1] = DELGOR + X2[JZ1 - 1];
+        X2[JA3 - 1] = DKAR / 2.0;
+        X2[JA1 - 1] = DOOK / 2.0;
+        X2[JA2 - 1] = DELOK + X2[JA1 - 1];
+        X2[JN - 1] = DKS / 2.0;
+        X1[IC2 - 1] = DELKAR;
+        X1[IC1 - 1] = X1[IC2 - 1] + ALKS;
+        X1[IC - 1] = ALKD;
+        for (int J = 2; J <= JZ; J++) {
+            X2[J - 1] = X2[J - 1 - 1] + X2[JZ - 1] / (JZ - 1);
+        }
+        int JZZ = JZ + 1;
+        for (int J = JZZ; J <= JZ1; J++) {
+            X2[J - 1] = X2[J - 1 - 1] + (X2[JZ1 - 1] - X2[JZ - 1]) / (JZ1 - JZ);
+        }
+        JZZ = JZ1 + 1;
+        for (int J = JZZ; J <= JA; J++) {
+            X2[J - 1] = X2[J - 1 - 1] + (X2[JA - 1] - X2[JZ1 - 1]) / (JA - JZ1);
+        }
+        JZZ = JA + 1;
+        for (int J = JZZ; J <= JA3; J++) {
+            X2[J - 1] = X2[J - 1 - 1] + (X2[JA3 - 1] - X2[JA - 1]) / (JA3 - JA);
+        }
+        JZZ = JA3 + 1;
+        for (int J = JZZ; J <= JA1; J++) {
+            X2[J - 1] = X2[J - 1 - 1] + (X2[JA1 - 1] - X2[JA3 - 1]) / (JA1 - JA3);
+        }
+        JZZ = JA1 + 1;
+        for (int J = JZZ; J <= JA2; J++) {
+            X2[J - 1] = X2[J - 1 - 1] + (X2[JA2 - 1] - X2[JA1 - 1]) / (JA2 - JA1);
+        }
+        JZZ = JA2 + 1;
+        for (int J = JZZ; J <= JN; J++) {
+            X2[J - 1] = X2[J - 1 - 1] + (X2[JN - 1] - X2[JA2 - 1]) / (JN - JA2);
+        }
+        int KJ;
+        int JJ = 0;
+        for (int J = 2; J <= JN; J++) {
+            double XX2 = DKR / 2.0 - X2[J];
+            JJ = J;
+            if (XX2 <= 0.0) break;
+        }
+        KJ = JJ - JC;
+        JC = JJ;
+        IC = IC - KJ;
+        int JB1 = JN;
+        int JB = JB1 - 1;
+        int JC1 = JC + 1;
+        X2[JC - 1] = DKR / 2.0;
+        int IC1 = IC - (JN - JC);
+        for (int I = 2; I <= IC2; I++) {
+            X1[I - 1] = X1[I - 1 - 1] + X1[IC2 - 1] / (IC2 - 1);
+        }
+        int ICC = IC2 + 1;
+        X1[IC1 - 1] = X1[IC2 - 1] + ALKS;
+        for (int I = ICC; I <= IC1; I++) {
+            X1[I - 1] = X1[I - 1 - 1] + (X1[IC1 - 1] - X1[IC2 - 1]) / (IC1 - IC2);
+        }
+        int ICLM1 = IC1 + 1;
+        for (int I = ICLM1; I <= IC; I++) {
+            int LK = JN - I + IC1;
+            X1[I - 1] = X1[IC1 - 1] + (X2[JN - 1] - X2[LK - 1]) / TGY;
+        }
+        ICC = IC + 1;
+        for (int I = ICC; I <= IN; I++) {
+            double XZ1 = 1.0;
+            if (NVAR != 1) XZ1 = 1.0E-3;
+            X1[I - 1] = X1[I - 1 - 1] + XZ1 / (IN - IC);
+        }
+        if (NVAR == 1) {
+            for (int J = 1; J <= JN; J++) {
+                X2[J - 1] = X2[J - 1] * 0.001;
+            }
+            for (int I = 1; I <= IN; I++) {
+                X1[I - 1] = X1[I - 1] * 0.001;
+            }
+        }
+        if (NCORD == 14 || NCORD == 1) {
+            for (int J = 1; J <= JN; J++) {
+                R[J - 1] = 1.0;
+            }
+        } else if (NCORD == 15 || NCORD == 2) {
+            for (int J = 1; J <= JN; J++) {
+                R[J - 1] = X2[J - 1];
+            }
+        }
+        for (int I = 2; I <= INM; I++) {
+            double DX1 = 1.0 / (X1[I + 1 - 1] - X1[I - 1 - 1]);
+            BW[I - 1] = DX1 / (X1[I - 1] - X1[I - 1 - 1]);
+            BE[I - 1] = DX1 / (X1[I + 1 - 1] - X1[I - 1]);
+        }
+        for (int J = 2; J <= JNM; J++) {
+            double DX2 = 0.5 / (X2[J + 1 - 1] - X2[J - 1 - 1]);
+            BS[J - 1] = (1.0 + R[J - 1 - 1] / R[J - 1]) / (X2[J - 1] - X2[J - 1 - 1]) * DX2;
+            BN[J - 1] = (1.0 + R[J + 1 - 1] / R[J - 1]) / (X2[J - 1 + 1] - X2[J - 1]) * DX2;
+        }
+        for (int J = 1; J <= JN; J++) {
+            for (int I = 1; I <= IN; I++) {
+                AE[I - 1][J - 1] = 0.0;
+                AW[I - 1][J - 1] = 0.0;
+                AN[I - 1][J - 1] = 0.0;
+                AS[I - 1][J - 1] = 0.0;
+                AE1[I - 1][J - 1] = 0.0;
+                AW1[I - 1][J - 1] = 0.0;
+                AN1[I - 1][J - 1] = 0.0;
+                AS1[I - 1][J - 1] = 0.0;
+                UKS[I - 1][J - 1] = 0.0;
+                VS[I - 1][J - 1] = 0.0;
+                FKS[I - 1][J - 1] = 0.0;
+                TKS[I - 1][J - 1] = 0.0;
+            }
+        }
+        for (int K = 1; K <= N3; K++) {
+            for (int J = 1; J <= JN; J++) {
+                for (int I = 1; I <= IN; I++) {
+                    A[I - 1][J - 1][K - 1] = 0.0;
+                }
+            }
+        }
     }
 
     public static void write7(String str) {
